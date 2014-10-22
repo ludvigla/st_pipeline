@@ -18,9 +18,12 @@ from itertools import izip
 from main.common.fastq_utils import *
 from main.common.utils import *
 import HTSeq
+
     
 def annotateReadsWithHTSeq(samFile, gtfFile, mode, outputFolder=None):
-    ''' Annotate the reads using htseq-count tool 
+    ''' Annotates the reads using htseq-count tool.
+        Input: a SAM file with reads, a GTF file with HTSeq annotations.
+        Output a SAM file with annotations.
     '''
     logger = logging.getLogger("STPipeline")
     
@@ -41,8 +44,8 @@ def annotateReadsWithHTSeq(samFile, gtfFile, mode, outputFolder=None):
     #-f (format)
     #-m (annotation mode)
     #-s (strandeness)
-    #-i (attribute in GFF to be used as ID)
-    #-t (feature type to be used in GFF)
+    #-i (attribute in GTF to be used as ID)
+    #-t (feature type to be used in GTF)
     #-r (input sorted order : name - pos)
     ##TODO make sure the sorting is correct and not affecting results
     ##TODO make sure having a fw or rw missing in a pair is not affecting results
@@ -58,9 +61,10 @@ def annotateReadsWithHTSeq(samFile, gtfFile, mode, outputFolder=None):
     
     return outputFile
 
+
 def getAllMappedReadsBed(mapWithGeneFile):
     ''' creates a map with the read names that are annotated and mapped and 
-        their mapping scores,chromosome and gene
+        their mapping scores, chromosome and gene
     '''
     #@todo check input format and correctness, same for output
     logger = logging.getLogger("STPipeline")
@@ -86,10 +90,11 @@ def getAllMappedReadsBed(mapWithGeneFile):
     logger.info("Created map of annotated reads, dropped : " + str(dropped) + " reads")  
     return mapped
 
+
 def getAllMappedReadsSam(annot_reads, htseq_no_ambiguous = False):
     ''' creates a map with the read names that are annotated and mapped and 
-        their mapping scores,chromosome and gene
-        We assume the gtf file has its gene ids replaced by gene names
+        their mapping scores, chromosome and gene.
+        We assume the gtf file has its gene IDs replaced by gene names
     '''
     
     logger = logging.getLogger("STPipeline")
@@ -126,7 +131,7 @@ def getAllMappedReadsSam(annot_reads, htseq_no_ambiguous = False):
         elif strand == "second":
             name += "/2"
         else:
-            droppped += 1
+            dropped += 1
             continue ## not possible
         
         mapped[name] = (mapping_quality,gene_name,chromosome)  # there should not be collisions
@@ -134,8 +139,9 @@ def getAllMappedReadsSam(annot_reads, htseq_no_ambiguous = False):
     logger.info("Created map of annotated reads, dropped : " + str(dropped) + " reads")  
     return mapped
 
+
 def getAnnotatedReadsFastq(annot_reads, fw, rv, htseq_no_ambiguous = False, outputFolder=None):  
-    ''' I get the forward and reverse reads,qualities and sequences that are annotated
+    ''' Gets the forward and reverse reads, qualities and sequences that are annotated
         and mapped (present in annot_reads)
     '''
     
