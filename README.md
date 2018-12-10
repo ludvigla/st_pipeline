@@ -175,3 +175,4 @@ https://github.com/alexdobin/STAR
 
 The ST Pipeline is recommended to be run on a computer with at least 32GB of RAM and 8 cpu cores. 
 
+# sg_pipeline
